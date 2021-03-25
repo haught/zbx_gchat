@@ -11,4 +11,17 @@ Next you configure your alerts just like you would any other. It is a bit convol
 2. put that user in a new *Google Chat Users* group, give the group permissions to your host groups you want to alert
 3. then just add a Configuration->Actions action to *Send message*, to user group *Google Chat Users*, and Send only to *Google Chat*.
 
+### Testing
 
+Testing is a bit of a pain as the media type expects a bunch of variables to be set, oftentimes one set variable may change what is required. When an alert occurs Zabbix fills these out, but we need to do this manually for our test. To just test connectivity, here is a simple method:
+
+1. In Administration->Media Types, click the Test action.
+2. You will need to confirm that *zabbix_url* and *gchat_endpoint* are set as described above.
+3. Fill in the following values for listed variables: 
+  ```event_source = 1
+alert_subject = Test alert
+alert_message = This is an alert message
+host_name = myhost.example.com
+host_ip = 10.10.10.10
+```
+4. Click test and you will receive a test message. It is not formatted well but it will quickly test if your message make it into the Chat room.
