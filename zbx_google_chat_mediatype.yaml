@@ -1,98 +1,97 @@
 zabbix_export:
   version: '5.2'
-  date: '2020-11-13T02:59:14Z'
+  date: '2022-04-12T22:36:14Z'
   media_types:
     -
       name: 'Google Chat'
       type: WEBHOOK
-      content_type: TEXT
       parameters:
-        1:
+        -
           name: alert_message
           value: '{ALERT.MESSAGE}'
-        2:
+        -
           name: alert_subject
           value: '{ALERT.SUBJECT}'
-        3:
+        -
           name: event_date
           value: '{EVENT.DATE}'
-        4:
+        -
           name: event_id
           value: '{EVENT.ID}'
-        5:
+        -
           name: event_nseverity
           value: '{EVENT.NSEVERITY}'
-        6:
+        -
           name: event_opdata
           value: '{EVENT.OPDATA}'
-        7:
+        -
           name: event_recovery_date
           value: '{EVENT.RECOVERY.DATE}'
-        8:
+        -
           name: event_recovery_time
           value: '{EVENT.RECOVERY.TIME}'
-        9:
+        -
           name: event_severity
           value: '{EVENT.SEVERITY}'
-        10:
+        -
           name: event_source
           value: '{EVENT.SOURCE}'
-        11:
+        -
           name: event_status
           value: '{EVENT.STATUS}'
-        12:
+        -
           name: event_tags
           value: '{EVENT.TAGS}'
-        13:
+        -
           name: event_time
           value: '{EVENT.TIME}'
-        14:
+        -
           name: event_update_action
           value: '{EVENT.UPDATE.ACTION}'
-        15:
+        -
           name: event_update_date
           value: '{EVENT.UPDATE.DATE}'
-        16:
+        -
           name: event_update_message
           value: '{EVENT.UPDATE.MESSAGE}'
-        17:
+        -
           name: event_update_status
           value: '{EVENT.UPDATE.STATUS}'
-        18:
+        -
           name: event_update_time
           value: '{EVENT.UPDATE.TIME}'
-        19:
+        -
           name: event_update_user
           value: '{USER.FULLNAME}'
-        20:
+        -
           name: event_value
           value: '{EVENT.VALUE}'
-        22:
+        -
           name: gchat_endpoint
           value: ''
-        21:
+        -
           name: host_ip
           value: '{HOST.IP}'
-        27:
+        -
           name: host_name
           value: '{HOST.NAME}'
-        0:
+        -
           name: HTTPProxy
           value: ''
-        23:
+        -
           name: trigger_description
           value: '{TRIGGER.DESCRIPTION}'
-        24:
+        -
           name: trigger_id
           value: '{TRIGGER.ID}'
-        25:
+        -
           name: use_default_message
           value: 'false'
-        26:
+        -
           name: zabbix_url
           value: '{$ZABBIX.URL}'
       script: |
-        // version 1.0
+        // version 1.1
         // modified from MS Teams media type
         // Matt Haught <dmhaught@ncsu.edu>
 
