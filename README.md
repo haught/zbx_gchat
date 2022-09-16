@@ -1,8 +1,10 @@
+
+# This project updated for Zabbix 6+. Versions below not suported.
 # Zabbix Media Type for Google Chat
 <img width="450" alt="Screen Shot 2021-05-27 at 12 36 10 PM-2" src="https://user-images.githubusercontent.com/1930408/119869513-53104080-beee-11eb-9f1e-eaf02986e881.png">
 
 
-This project updated for Zabbix 6+. Versions below not suported. This is a media type that allows for alerts to be sent without using any server scripts. Getting those scripts to work with their dependencies in a minimal container is a bit of a pain and not nearly as nice as these newer media types.
+This project is a media type for Zabbix 6+ that allows for alerts to be sent without using any server scripts. Getting those scripts to work with their dependencies in a minimal container is a bit of a pain and not nearly as nice as these newer media types.
 
 To install this media type, go to Administration->Media types and import the yaml file.
 
