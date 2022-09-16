@@ -1,6 +1,6 @@
 zabbix_export:
-  version: '5.2'
-  date: '2022-04-12T22:36:14Z'
+  version: '6.2'
+  date: '2022-09-16T07:45:50Z'
   media_types:
     -
       name: 'Google Chat'
@@ -77,7 +77,6 @@ zabbix_export:
           value: '{HOST.NAME}'
         -
           name: HTTPProxy
-          value: ''
         -
           name: trigger_description
           value: '{TRIGGER.DESCRIPTION}'
@@ -91,10 +90,10 @@ zabbix_export:
           name: zabbix_url
           value: '{$ZABBIX.URL}'
       script: |
-        // version 1.1
+        // version 1.2
         // modified from MS Teams media type
         // Matt Haught <dmhaught@ncsu.edu>
-
+        
         var SEVERITY_COLORS = [
             '#97AAB3', // Not classified.
             '#7499FF', // Information.
@@ -105,49 +104,49 @@ zabbix_export:
             '#009900', // Resolved.
             '#000000'  // Default.
         ];
-
+        
         try {
             var params = JSON.parse(value);
-
+        
             if (!params.gchat_endpoint) {
                 throw 'Cannot get gchat_endpoint';
             }
             else if (!params.gchat_endpoint.startsWith('https://chat.googleapis.com/v1/spaces/')) {
                 throw 'Invalid Google Chat webhook URL: ' + params.gchat_endpoint;
             }
-
+        
             params.zabbix_url = (params.zabbix_url.endsWith('/'))
             ? params.zabbix_url.slice(0, -1) : params.zabbix_url;
-
+        
             if ([0, 1, 2, 3].indexOf(parseInt(params.event_source)) === -1) {
                 throw 'Incorrect "event_source" parameter given: "' + params.event_source + '".\nMust be 0-3.';
             }
-
+        
             // Set "use_default_message" to true for non trigger-based events.
             if (params.event_source !== '0') {
                 params.use_default_message = 'true';
             }
-
+        
             // Check {EVENT.VALUE} for trigger-based and internal events.
             if (params.event_value !== '0' && params.event_value !== '1'
                 && (params.event_source === '0' || params.event_source === '3')) {
                 throw 'Incorrect "event_value" parameter given: "' + params.event_value + '".\nMust be 0 or 1.';
             }
-
+        
             // Check {EVENT.UPDATE.STATUS} only for trigger-based events.
             if (params.event_update_status !== '0' && params.event_update_status !== '1' && params.event_source === '0') {
                 throw 'Incorrect "event_update_status" parameter given: "' + params.event_update_status + '".\nMust be 0 or 1.';
             }
-
+        
             if (params.event_value == 0) {
                 params.event_nseverity = '6';
             }
-
+        
             if (!SEVERITY_COLORS[params.event_nseverity]) {
                 params.event_nseverity = '7';
             }
-
-            var request = new CurlHttpRequest();
+        
+            var request = new HttpRequest();
             var facts = [];
             var body = {
                     cards: [
@@ -171,7 +170,7 @@ zabbix_export:
                         }
                     ]
                 };
-
+        
             if (params.use_default_message.toLowerCase() == 'true' && params.alert_message) {
                 body.cards[0].sections.push({
                     widgets: [
@@ -193,7 +192,7 @@ zabbix_export:
                     ]
                 });
             }
-
+        
             if (params.use_default_message.toLowerCase() !== 'true') {
                 // Problem message.
                 if (params.event_value === '1' && params.event_update_status === '0') {
@@ -211,7 +210,7 @@ zabbix_export:
                             text: params.event_update_user + ' ' + params.event_update_action + '.'
                         }
                     });
-
+        
                     if (params.event_update_message) {
                         facts.push({
                             keyValue: {
@@ -220,7 +219,7 @@ zabbix_export:
                             }
                         });
                     }
-
+        
                     facts.push({
                         keyValue: {
                             topLabel: 'Event update time',
@@ -237,7 +236,7 @@ zabbix_export:
                         }
                     });
                 }
-
+        
                 if (params.event_severity && params.event_severity !== '{EVENT.SEVERITY}') {
                     facts.push({
                         keyValue: {
@@ -246,8 +245,8 @@ zabbix_export:
                         }
                     });
                 }
-
-
+        
+        
                 if (params.event_opdata && params.event_opdata !== '{EVENT.OPDATA}') {
                     facts.push({
                         keyValue: {
@@ -256,7 +255,7 @@ zabbix_export:
                         }
                     });
                 }
-
+        
                 if (params.event_tags && params.event_tags !== '{EVENT.TAGS}') {
                     facts.push({
                         keyValue: {
@@ -265,9 +264,9 @@ zabbix_export:
                         }
                     });
                 }
-
+        
                 body.cards[0].sections.push({widgets: facts });
-
+        
                 if (params.zabbix_url.startsWith('http')) {
                     body.cards[0].sections.push({
                         widgets: [
@@ -294,19 +293,19 @@ zabbix_export:
                     });
                 }
             }
-
-            request.AddHeader('Content-Type: application/json');
-
+        
+            request.addHeader('Content-Type: application/json');
+        
             if (typeof params.HTTPProxy === 'string' && params.HTTPProxy !== '') {
                 request.SetProxy(params.HTTPProxy);
             }
-
+        
             Zabbix.Log(4, '[ Google Chat Webhook ] JSON: ' + JSON.stringify(body));
-
-            var response = request.Post(params.gchat_endpoint, JSON.stringify(body));
-
+        
+            var response = request.post(params.gchat_endpoint, JSON.stringify(body));
+        
             Zabbix.Log(4, '[ Google Chat Webhook ] Response: ' + response);
-
+        
             if (response.error) {
                 Zabbix.Log(4, '[ Google Chat Webhook ] FAILED with response: ' + response.error.message);
                 throw response;
@@ -320,8 +319,8 @@ zabbix_export:
             throw 'Sending failed: ' + error;
         }
       description: |
-        Please refer to https://developers.google.com/hangouts/chat/how-tos/webhooks
-
+        Please refer to https://developers.google.com/chat/how-tos/webhooks
+        
         Set global macro {$ZABBIX.URL} with your Zabbix server URL.
         Add a dedicated user with the media type "Google Chat" and place the webhook url into the gchat_endpoint parameter to integrate into the service.
       message_templates:
@@ -355,7 +354,7 @@ zabbix_export:
           message: |
             {USER.FULLNAME} {EVENT.UPDATE.ACTION} problem at {EVENT.UPDATE.DATE} {EVENT.UPDATE.TIME}.
             {EVENT.UPDATE.MESSAGE}
-
+            
             Current problem status is {EVENT.STATUS}, acknowledged: {EVENT.ACK.STATUS}.
         -
           event_source: DISCOVERY
@@ -363,12 +362,12 @@ zabbix_export:
           subject: 'Discovery: {DISCOVERY.DEVICE.STATUS} {DISCOVERY.DEVICE.IPADDRESS}'
           message: |
             Discovery rule: {DISCOVERY.RULE.NAME}
-
+            
             Device IP: {DISCOVERY.DEVICE.IPADDRESS}
             Device DNS: {DISCOVERY.DEVICE.DNS}
             Device status: {DISCOVERY.DEVICE.STATUS}
             Device uptime: {DISCOVERY.DEVICE.UPTIME}
-
+            
             Device service name: {DISCOVERY.SERVICE.NAME}
             Device service port: {DISCOVERY.SERVICE.PORT}
             Device service status: {DISCOVERY.SERVICE.STATUS}
