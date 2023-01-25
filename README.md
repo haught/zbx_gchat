@@ -1,12 +1,14 @@
+
+# This project updated for Zabbix 6+. Versions below not suported.
 # Zabbix Media Type for Google Chat
 <img width="450" alt="Screen Shot 2021-05-27 at 12 36 10 PM-2" src="https://user-images.githubusercontent.com/1930408/119869513-53104080-beee-11eb-9f1e-eaf02986e881.png">
 
 
-This project is a media type for Zabbix 5+ that allows for alerts to be sent without using any server scripts. Getting those scripts to work with their dependencies in a minimal container is a bit of a pain and not nearly as nice as these newer media types.
+This project is a media type for Zabbix 6+ that allows for alerts to be sent without using any server scripts. Getting those scripts to work with their dependencies in a minimal container is a bit of a pain and not nearly as nice as these newer media types.
 
 To install this media type, go to Administration->Media types and import the yaml file.
 
-To configure the media type, set the *zabbix_url* to your global $ZABBIX_URL or manually set it. Some messages will fail without the *zabbix_url* as Google verifies URLs. Also a Google Chat *gchat_endpoint* will be needed. Just create a room and [add a webhook](https://developers.google.com/hangouts/chat/how-tos/webhooks).
+To configure the media type, set the *zabbix_url* to your global $ZABBIX_URL or manually set it. Some messages will fail without the *zabbix_url* as Google verifies URLs. Also a Google Chat *gchat_endpoint* will be needed. Just create a room and [add a webhook](https://developers.google.com/chat/how-tos/webhooks).
 
 Once you have those items ready, you are ready to configure 3 things - User media, action, and the endpoint macro. 
 
