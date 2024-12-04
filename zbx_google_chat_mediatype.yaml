@@ -68,7 +68,7 @@ zabbix_export:
           value: '{EVENT.VALUE}'
         -
           name: gchat_endpoint
-          value: ''
+          value: '{ALERT.SENDTO}'
         -
           name: host_ip
           value: '{HOST.IP}'
