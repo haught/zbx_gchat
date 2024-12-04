@@ -297,7 +297,7 @@ zabbix_export:
             request.addHeader('Content-Type: application/json');
         
             if (typeof params.HTTPProxy === 'string' && params.HTTPProxy !== '') {
-                request.SetProxy(params.HTTPProxy);
+                request.setProxy(params.HTTPProxy);
             }
         
             Zabbix.Log(4, '[ Google Chat Webhook ] JSON: ' + JSON.stringify(body));
